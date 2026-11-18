@@ -2,65 +2,91 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f6f8"><title>JJK Phantom Modifier V0.2</title>
+<meta name="theme-color" content="#f5f6f8"><title>JJK Phantom Modifier V0.3</title>
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17191d;background:#f5f6f8}
-*{box-sizing:border-box}body{margin:0;padding:22px 16px 40px;max-width:680px;margin:auto}
-header{padding:12px 4px 18px}small,.muted{color:#747982}h1{font-size:28px;margin:5px 0}h2{font-size:17px;margin:0 0 14px}
-.card{background:#fff;border:1px solid #e8e9ed;border-radius:18px;padding:17px;margin:12px 0;box-shadow:0 2px 10px #10182808}
-.tabs{display:flex;gap:8px;margin:12px 0}.tabs button{flex:1}
-button{border:0;border-radius:12px;padding:12px 15px;background:#20242b;color:white;font-size:15px;font-weight:600}
-button.secondary{background:#eef0f3;color:#20242b}button.danger{background:#fff0f0;color:#a22}
+*{box-sizing:border-box}body{margin:0;padding:20px 14px 42px;max-width:760px;margin:auto}
+header{padding:10px 4px 18px}small,.muted{color:#747982}h1{font-size:27px;margin:5px 0}h2{font-size:18px;margin:0 0 12px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 2px 10px #10182808}
+.tabs,.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+button,select{border:0;border-radius:11px;padding:11px 13px;background:#20242b;color:white;font-size:14px;font-weight:600}
+button.secondary{background:#eef0f3;color:#20242b}button.active{background:#20242b;color:#fff}
+input,select.field{width:100%;padding:12px;border:1px solid #dfe2e7;border-radius:10px;font-size:16px;background:#fff;color:#17191d}
 label{display:block;font-size:13px;color:#60656e;margin:10px 0 5px}
-input{width:100%;padding:12px;border:1px solid #dfe2e7;border-radius:10px;font-size:16px;background:#fff;color:#17191d}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result{font-size:34px;font-weight:750;letter-spacing:-1px;margin:5px 0}
-.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.item{padding:12px 0;border-bottom:1px solid #eee}.item:last-child{border:0}
-.notice{font-size:12px;line-height:1.5;color:#747982}.hidden{display:none}
-</style>
-</head>
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.list{display:grid;grid-template-columns:1fr;gap:8px}.char{background:#f4f5f7;border-radius:13px;padding:12px;text-align:left;color:#17191d}
+.char strong{display:block;font-size:15px}.char small{display:block;margin-top:4px}
+.pill{display:inline-block;padding:3px 8px;border-radius:20px;background:#eceef2;color:#555;font-size:11px;margin:5px 4px 0 0}
+.result{font-size:32px;font-weight:750;margin:7px 0}.notice{font-size:12px;line-height:1.55;color:#747982}
+.hidden{display:none}.muted{font-size:13px}
+</style></head>
 <body>
-<header><small>PHANTOM NIGHT · CHARACTER LAB</small><h1>JJK Phantom Modifier</h1><div class="muted">獨立角色資料與傷害研究工具 · V0.2</div></header>
-<div class="tabs"><button id="tabData">角色資料</button><button class="secondary" id="tabCalc">傷害測試</button></div>
-<section id="dataView">
-<div class="card"><h2>角色資料庫</h2><div id="list"></div><button class="secondary" id="add">＋ 新增角色</button></div>
-<div class="card"><h2 id="formTitle">角色編輯</h2>
-<label>角色名稱</label><input id="name" value="測試角色 A" maxlength="40">
-<div class="grid"><div><label>HP</label><input id="hp" type="number" min="0" value="25000"></div>
-<div><label>攻擊力 ATK</label><input id="atk" type="number" min="0" value="5000"></div>
-<div><label>防禦力 DEF</label><input id="def" type="number" min="0" value="2000"></div>
-<div><label>模擬倍率</label><input id="mult" type="number" min="0.01" step="0.1" value="1"></div></div>
-<div class="row" style="margin-top:14px"><button id="save">儲存角色</button><button class="danger" id="remove">刪除</button></div></div>
-</section>
-<section id="calcView" class="hidden">
-<div class="card"><h2>傷害倍率計算器</h2><label>選擇角色</label><select id="choose" style="width:100%;padding:12px;border:1px solid #dfe2e7;border-radius:10px;font-size:16px"></select>
-<label>原始傷害</label><input id="base" type="number" min="0" value="5000">
-<label>自訂倍率</label><input id="factor" type="number" min="0.01" step="0.1" value="2">
-<div class="muted" style="margin-top:15px">模擬結果</div><div class="result" id="result">10,000</div><div class="notice">計算公式：原始傷害 × 自訂倍率。此結果僅供獨立模擬，不代表遊戲內實際傷害。</div></div>
-</section>
-<div class="card notice">資料儲存在目前瀏覽器的本機儲存空間。清除瀏覽器資料或更換裝置可能使資料消失。此工具不連接遊戲、不讀取其他 App 資料，也不修改遊戲伺服器或線上戰鬥結果。</div>
+<header><small>PHANTOM NIGHT · CHARACTER DATABASE</small><h1>JJK Phantom Modifier</h1><div class="muted">日版角色資料庫與傷害研究工具 · V0.3</div></header>
+<div class="tabs"><button id="rosterTab">全角色資料庫</button><button id="calcTab" class="secondary">傷害模擬</button></div>
+<section id="roster">
+<div class="card">
+ <div class="row"><h2>角色名單</h2><span class="muted" id="count"></span></div>
+ <input id="search" placeholder="搜尋角色名稱…">
+ <div class="filters"><select id="rarity" class="field" style="width:auto"><option value="">全部稀有度</option><option>SSR</option><option>SR</option><option>R</option><option>未確認</option></select>
+ <select id="attack" class="field" style="width:auto"><option value="">全部攻擊類型</option><option>體</option><option>術</option><option>複</option><option>未確認</option></select>
+ <select id="trait" class="field" style="width:auto"><option value="">全部特性</option><option>幻</option><option>影</option><option>夜</option><option>行</option><option>未確認</option></select></div>
+ <div class="list" id="list"></div>
+</div>
+<div class="card">
+ <h2 id="editTitle">角色資料</h2>
+ <div class="muted" id="selectedName">請從上方名單選擇角色</div>
+ <label>角色名稱</label><input id="name" placeholder="角色名稱">
+ <div class="grid">
+ <div><label>稀有度</label><select id="rarityEdit" class="field"><option>未確認</option><option>SSR</option><option>SR</option><option>R</option></select></div>
+ <div><label>攻擊類型</label><select id="attackEdit" class="field"><option>未確認</option><option>體</option><option>術</option><option>複</option></select></div>
+ <div><label>特性</label><select id="traitEdit" class="field"><option>未確認</option><option>幻</option><option>影</option><option>夜</option><option>行</option></select></div>
+ <div><label>角色定位</label><select id="roleEdit" class="field"><option>未確認</option><option>攻擊</option><option>防衛</option><option>強化</option><option>弱體</option><option>妨害</option><option>回復</option></select></div>
+ </div>
+ <div class="grid">
+ <div><label>HP</label><input id="hp" type="number" min="0" placeholder="待填"></div>
+ <div><label>ATK</label><input id="atk" type="number" min="0" placeholder="待填"></div>
+ <div><label>體術</label><input id="physical" type="number" min="0" placeholder="待填"></div>
+ <div><label>術式</label><input id="technique" type="number" min="0" placeholder="待填"></div>
+ <div><label>防禦力</label><input id="def" type="number" min="0" placeholder="待填"></div>
+ <div><label>速度</label><input id="speed" type="number" min="0" placeholder="待填"></div>
+ </div>
+ <label>備註／版本／資料來源</label><input id="note" placeholder="例如：技能版本、資料來源">
+ <div class="row" style="margin-top:14px"><button id="save">儲存資料</button><button id="reset" class="secondary">清空欄位</button></div>
+ <p class="notice">角色名稱為初始索引。未經可靠來源核對的稀有度、分類與數值均標示「未確認／待填」，不會假裝是官方數值。資料只存在此瀏覽器，不會改動遊戲。</p>
+</div></section>
+<section id="calculator" class="hidden"><div class="card">
+<h2>獨立傷害模擬</h2><label>選擇角色</label><select id="calcChar" class="field"></select>
+<label>基礎傷害</label><input id="base" type="number" min="0" value="5000">
+<label>自訂倍率</label><input id="factor" type="number" min="0" step="0.1" value="2">
+<div class="muted" style="margin-top:15px">模擬結果</div><div class="result" id="result">10,000</div>
+<div class="notice">公式：基礎傷害 × 自訂倍率。這是獨立計算器，不會連接或修改遊戲內實際戰鬥。</div>
+</div></section>
+<div class="card notice">本工具為非官方粉絲研究工具。角色清單是資料庫起始索引；不同版本／卡面可能有不同數值。請自行核對日版遊戲內資料並記錄來源。資料儲存在此瀏覽器本機。</div>
 <script>
+const names=["虎杖悠仁","伏黑恵","釘崎野薔薇","禪院真希","狗巻棘","パンダ","乙骨憂太","東堂葵","西宮桃","三輪霞","禪院真依","究極メカ丸","与幸吉","加茂憲紀","五条悟","七海建人","家入硝子","夜蛾正道","伊地知潔高","冥冥","禪院直毘人","日下部篤也","猪野琢真","楽巌寺嘉伸","竜胆サキ","結木海斗","漆英司","夏油傑","漏瑚","花御","真人","陀艮","吉野順平","両面宿儺","脹相","裏梅","伏黒甚爾","ミゲル","庵歌姫","奈木野健介","朧絶","羂索","灰原雄","禪院直哉"];
+let data=JSON.parse(localStorage.getItem("jjk_v03")||"null");
+if(!data)data=names.map((n,i)=>({id:i+1,name:n,rarity:"未確認",attack:"未確認",trait:"未確認",role:"未確認",hp:"",atk:"",physical:"",technique:"",def:"",speed:"",note:""}));
+let chosen=null;
 const $=id=>document.getElementById(id);
-let chars=JSON.parse(localStorage.getItem('jjkpm_chars')||'null')||[{id:crypto.randomUUID(),name:'測試角色 A',hp:25000,atk:5000,def:2000,mult:1}];
-let current=chars[0]?.id||null;
-function persist(){localStorage.setItem('jjkpm_chars',JSON.stringify(chars));render()}
+function persist(){localStorage.setItem("jjk_v03",JSON.stringify(data));render()}
 function render(){
- $('list').innerHTML=chars.map(c=>`<div class="item row"><button class="secondary" data-id="${c.id}" style="text-align:left;flex:1">${escapeHtml(c.name)}<br><small>HP ${c.hp} · ATK ${c.atk} · DEF ${c.def}</small></button><button class="secondary" data-edit="${c.id}">編輯</button></div>`).join('')||'<p class="muted">尚無角色，請新增。</p>';
- document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>load(b.dataset.id));
- document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>load(b.dataset.edit));
- $('choose').innerHTML=chars.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
- if(current && chars.some(c=>c.id===current))$('choose').value=current;
- calc();
+ const q=$("search").value.trim().toLowerCase(),r=$("rarity").value,a=$("attack").value,t=$("trait").value;
+ const rows=data.filter(c=>(c.name.toLowerCase().includes(q))&&(!r||c.rarity===r)&&(!a||c.attack===a)&&(!t||c.trait===t));
+ $("count").textContent=`${rows.length} / ${data.length} 位`;
+ $("list").innerHTML=rows.map(c=>`<button class="char" data-id="${c.id}"><strong>${esc(c.name)}</strong><small>${esc(c.rarity)} · ${esc(c.attack)}攻擊 · ${esc(c.trait)}特性 · ${esc(c.role)}</small><small>HP ${c.hp||"待填"}　ATK ${c.atk||"待填"}</small></button>`).join("")||'<div class="muted">沒有符合的角色</div>';
+ document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>load(+b.dataset.id));
+ $("calcChar").innerHTML=data.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+ if(chosen!==null)$("calcChar").value=chosen;
 }
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function load(id){let c=chars.find(x=>x.id===id);if(!c)return;current=id;$('name').value=c.name;$('hp').value=c.hp;$('atk').value=c.atk;$('def').value=c.def;$('mult').value=c.mult;$('formTitle').textContent='編輯角色'}
-function valid(){return $('name').value.trim()&&['hp','atk','def','mult'].every(k=>Number.isFinite(+$ (k).value)&&+$ (k).value>=0)&&+$('mult').value>0}
-$('save').onclick=()=>{if(!valid()){alert('請輸入有效的數值');return}let c={id:current||crypto.randomUUID(),name:$('name').value.trim(),hp:+$('hp').value,atk:+$('atk').value,def:+$('def').value,mult:+$('mult').value};let i=chars.findIndex(x=>x.id===c.id);if(i<0)chars.push(c);else chars[i]=c;current=c.id;persist();$('formTitle').textContent='編輯角色'};
-$('add').onclick=()=>{current=null;$('name').value='新角色';$('hp').value=0;$('atk').value=0;$('def').value=0;$('mult').value=1;$('formTitle').textContent='新增角色'};
-$('remove').onclick=()=>{if(!current)return;chars=chars.filter(c=>c.id!==current);current=chars[0]?.id||null;persist();if(current)load(current);else $('add').click()};
-$('base').oninput=$('factor').oninput=calc;$('choose').onchange=()=>{current=$('choose').value;let c=chars.find(x=>x.id===current);if(c)$('factor').value=c.mult;calc()};
-function calc(){let n=(+$('base').value||0)*(+$('factor').value||0);$('result').textContent=Math.round(n).toLocaleString('en-US')}
-$('tabData').onclick=()=>{$('dataView').classList.remove('hidden');$('calcView').classList.add('hidden');$('tabData').className='';$('tabCalc').className='secondary'};
-$('tabCalc').onclick=()=>{$('dataView').classList.add('hidden');$('calcView').classList.remove('hidden');$('tabCalc').className='';$('tabData').className='secondary';calc()};
-render();if(current)load(current);
-</script>
-</body></html>
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function load(id){let c=data.find(x=>x.id===id);if(!c)return;chosen=id;$("selectedName").textContent=c.name;$("editTitle").textContent="編輯角色資料";
+ for(let k of ["name","rarity","attack","trait","role","hp","atk","physical","technique","def","speed","note"]){let el=$(k==="rarity"?"rarityEdit":k==="attack"?"attackEdit":k==="trait"?"traitEdit":k==="role"?"roleEdit":k);el.value=c[k]??""} }
+$("save").onclick=()=>{if(chosen===null){alert("請先從上方名單選擇角色");return}let c=data.find(x=>x.id===chosen);for(let k of ["name","hp","atk","physical","technique","def","speed","note"])c[k]=$(k).value;for(let [k,id] of [["rarity","rarityEdit"],["attack","attackEdit"],["trait","traitEdit"],["role","roleEdit"]])c[k]=$(id).value;persist();$("selectedName").textContent=c.name};
+$("reset").onclick=()=>{chosen=null;$("selectedName").textContent="請從上方名單選擇角色";$("editTitle").textContent="角色資料";document.querySelectorAll("#name,#hp,#atk,#physical,#technique,#def,#speed,#note").forEach(x=>x.value="")};
+["search","rarity","attack","trait"].forEach(id=>$(id).addEventListener("input",render));
+function calc(){let n=(+$("base").value||0)*(+$("factor").value||0);$("result").textContent=Math.round(n).toLocaleString("en-US")}
+$("base").oninput=$("factor").oninput=calc;
+$("rosterTab").onclick=()=>{$("roster").classList.remove("hidden");$("calculator").classList.add("hidden");$("rosterTab").className="";$("calcTab").className="secondary"};
+$("calcTab").onclick=()=>{$("roster").classList.add("hidden");$("calculator").classList.remove("hidden");$("calcTab").className="";$("rosterTab").className="secondary";calc()};
+render();
+</script></body></html>
